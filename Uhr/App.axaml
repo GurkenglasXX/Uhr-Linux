@@ -1,0 +1,92 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Uhr.App"
+             xmlns:local="using:Uhr"
+             RequestedThemeVariant="Default">
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F3F3" />
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FBFBFB" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#E5E5E5" />
+                    <SolidColorBrush x:Key="SubtleTextBrush" Color="#5F5F5F" />
+                    <SolidColorBrush x:Key="RingTrackBrush" Color="#DADADA" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#202020" />
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2B2B2B" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#1D1D1D" />
+                    <SolidColorBrush x:Key="SubtleTextBrush" Color="#C5C5C5" />
+                    <SolidColorBrush x:Key="RingTrackBrush" Color="#3D3D3D" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource SystemAccentColor}" />
+
+            <StreamGeometry x:Key="AlarmIcon">M22,5.72 L17.4,1.86 L16.11,3.39 L20.71,7.25 Z M7.88,3.39 L6.6,1.86 L2,5.71 L3.29,7.24 Z M12.5,8 L11,8 L11,14 L15.75,16.85 L16.5,15.62 L12.5,13.25 Z M12,4 C7.03,4 3,8.03 3,13 C3,17.97 7.02,22 12,22 C16.97,22 21,17.97 21,13 C21,8.03 16.97,4 12,4 Z M12,20 C8.13,20 5,16.87 5,13 C5,9.13 8.13,6 12,6 C15.87,6 19,9.13 19,13 C19,16.87 15.87,20 12,20 Z</StreamGeometry>
+            <StreamGeometry x:Key="TimerIcon">M15,1 L9,1 L9,3 L15,3 Z M11,14 L13,14 L13,8 L11,8 Z M19.03,7.39 L20.45,5.97 C20.02,5.46 19.55,4.98 19.04,4.56 L17.62,5.98 C16.07,4.74 14.12,4 12,4 C7.03,4 3,8.03 3,13 C3,17.97 7.02,22 12,22 C16.98,22 21,17.97 21,13 C21,10.88 20.26,8.93 19.03,7.39 Z M12,20 C8.13,20 5,16.87 5,13 C5,9.13 8.13,6 12,6 C15.87,6 19,9.13 19,13 C19,16.87 15.87,20 12,20 Z</StreamGeometry>
+            <StreamGeometry x:Key="FocusIcon">M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 12,2 Z M12,20 C7.59,20 4,16.41 4,12 C4,7.59 7.59,4 12,4 C16.41,4 20,7.59 20,12 C20,16.41 16.41,20 12,20 Z M12,7 C9.24,7 7,9.24 7,12 C7,14.76 9.24,17 12,17 C14.76,17 17,14.76 17,12 C17,9.24 14.76,7 12,7 Z</StreamGeometry>
+            <StreamGeometry x:Key="AddIcon">M19,13 L13,13 L13,19 L11,19 L11,13 L5,13 L5,11 L11,11 L11,5 L13,5 L13,11 L19,11 Z</StreamGeometry>
+            <StreamGeometry x:Key="DeleteIcon">M6,19 C6,20.1 6.9,21 8,21 L16,21 C17.1,21 18,20.1 18,19 L18,7 L6,7 Z M19,4 L15.5,4 L14.5,3 L9.5,3 L8.5,4 L5,4 L5,6 L19,6 Z</StreamGeometry>
+            <StreamGeometry x:Key="PlayIcon">M8,5 L8,19 L19,12 Z</StreamGeometry>
+            <StreamGeometry x:Key="PauseIcon">M6,19 L10,19 L10,5 L6,5 Z M14,5 L14,19 L18,19 L18,5 Z</StreamGeometry>
+            <StreamGeometry x:Key="ResetIcon">M17.65,6.35 C16.2,4.9 14.21,4 12,4 C7.58,4 4.01,7.58 4.01,12 C4.01,16.42 7.58,20 12,20 C15.73,20 18.84,17.45 19.73,14 L17.65,14 C16.83,16.33 14.61,18 12,18 C8.69,18 6,15.31 6,12 C6,8.69 8.69,6 12,6 C13.66,6 15.14,6.69 16.22,7.78 L13,11 L20,11 L20,4 Z</StreamGeometry>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Padding" Value="12,0" />
+        </Style>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style Selector="TextBlock.pageTitle">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="TextBlock.cardTitle">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="TextBlock.subtle">
+            <Setter Property="Foreground" Value="{DynamicResource SubtleTextBrush}" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button.icon">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="8" />
+        </Style>
+        <Style Selector="Button.round">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="PathIcon">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Width" Value="120" />
+            <Setter Property="FormatString" Value="0" />
+            <Setter Property="Increment" Value="1" />
+        </Style>
+    </Application.Styles>
+</Application>

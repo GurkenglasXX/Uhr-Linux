@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Uhr.ViewModels"
+             x:Class="Uhr.Views.AlarmsView"
+             x:DataType="vm:AlarmsViewModel">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Classes="card" Margin="0,0,0,16">
+            <StackPanel Spacing="12">
+                <TextBlock Classes="cardTitle" Text="Neuer Wecker" />
+                <WrapPanel ItemSpacing="12" LineSpacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Name" />
+                        <TextBox Text="{Binding NewName}" Width="220" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Uhrzeit" />
+                        <TimePicker SelectedTime="{Binding NewTime}" ClockIdentifier="24HourClock" />
+                    </StackPanel>
+                    <Button Classes="accent" Command="{Binding AddCommand}" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="{StaticResource AddIcon}" />
+                            <TextBlock Text="Hinzufügen" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock DockPanel.Dock="Top" Classes="subtle" Margin="0,24"
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding !Alarms.Count}"
+                   Text="Noch keine Wecker angelegt." />
+
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Alarms}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemSpacing="12" LineSpacing="12" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:AlarmViewModel">
+                        <Border Classes="card" Width="280">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <TextBlock Text="{Binding TimeText}" FontSize="44" FontWeight="SemiLight" />
+                                <ToggleSwitch Grid.Column="1" VerticalAlignment="Top" MinWidth="0"
+                                              IsChecked="{Binding IsEnabled}" OnContent="" OffContent="" />
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Name}"
+                                           Classes="cardTitle" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Row="2" Classes="subtle" VerticalAlignment="Center"
+                                           Text="{Binding NextRingText}" />
+                                <Button Grid.Row="2" Grid.Column="1" Classes="icon"
+                                        Command="{Binding DeleteCommand}" ToolTip.Tip="Löschen">
+                                    <PathIcon Data="{StaticResource DeleteIcon}" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Uhr.ViewModels"
+             x:Class="Uhr.Views.TimersView"
+             x:DataType="vm:TimersViewModel">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Classes="card" Margin="0,0,0,16">
+            <StackPanel Spacing="12">
+                <TextBlock Classes="cardTitle" Text="Neuer Timer" />
+                <WrapPanel ItemSpacing="12" LineSpacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Name" />
+                        <TextBox Text="{Binding NewName}" Width="220" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Stunden" />
+                        <NumericUpDown Value="{Binding NewHours}" Minimum="0" Maximum="23" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Minuten" />
+                        <NumericUpDown Value="{Binding NewMinutes}" Minimum="0" Maximum="59" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Sekunden" />
+                        <NumericUpDown Value="{Binding NewSeconds}" Minimum="0" Maximum="59" />
+                    </StackPanel>
+                    <Button Classes="accent" Command="{Binding AddCommand}" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="{StaticResource AddIcon}" />
+                            <TextBlock Text="Hinzufügen" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock DockPanel.Dock="Top" Classes="subtle" Margin="0,24"
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding !Timers.Count}"
+                   Text="Noch keine Timer angelegt." />
+
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Timers}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemSpacing="12" LineSpacing="12" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TimerViewModel">
+                        <Border Classes="card" Width="280">
+                            <StackPanel Spacing="12">
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Classes="icon"
+                                            Command="{Binding DeleteCommand}" ToolTip.Tip="Löschen">
+                                        <PathIcon Data="{StaticResource DeleteIcon}" />
+                                    </Button>
+                                    <TextBlock Classes="cardTitle" VerticalAlignment="Center"
+                                               Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                </DockPanel>
+                                <Panel Width="190" Height="190">
+                                    <Ellipse Stroke="{DynamicResource RingTrackBrush}" StrokeThickness="6" Margin="3" />
+                                    <Arc Stroke="{DynamicResource AccentBrush}" StrokeThickness="6" Margin="3"
+                                         StrokeLineCap="Round" StartAngle="-90"
+                                         SweepAngle="{Binding ProgressAngle}" />
+                                    <TextBlock Text="{Binding RemainingText}" FontSize="32" FontWeight="SemiLight"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Panel>
+                                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                                    <Button Classes="accent round" Command="{Binding StartPauseCommand}"
+                                            ToolTip.Tip="Starten / Anhalten">
+                                        <Panel>
+                                            <PathIcon Data="{StaticResource PlayIcon}" IsVisible="{Binding !IsRunning}" />
+                                            <PathIcon Data="{StaticResource PauseIcon}" IsVisible="{Binding IsRunning}" />
+                                        </Panel>
+                                    </Button>
+                                    <Button Classes="round" Command="{Binding ResetCommand}" ToolTip.Tip="Zurücksetzen">
+                                        <PathIcon Data="{StaticResource ResetIcon}" />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
