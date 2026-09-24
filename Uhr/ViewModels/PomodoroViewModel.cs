@@ -8,6 +8,8 @@ namespace Uhr.ViewModels;
 
 public partial class PomodoroViewModel : CountdownViewModelBase
 {
+    private const int PostponeMinutes = 3;
+
     private readonly INotificationService _notifications;
     private readonly Action<PomodoroViewModel> _delete;
 
@@ -44,7 +46,9 @@ public partial class PomodoroViewModel : CountdownViewModelBase
         {
             IsBreak = true;
             StartCountdown(CurrentDuration);
-            _notifications.Notify("Fokuszeit vorbei", $"{Name}: {Model.BreakMinutes} Min. Pause (Zyklus {CurrentCycle} von {Model.Cycles})");
+            var cycle = CurrentCycle;
+            _notifications.Notify("Fokuszeit vorbei", $"{Name}: {Model.BreakMinutes} Min. Pause (Zyklus {CurrentCycle} von {Model.Cycles})",
+                $"Pause um {PostponeMinutes} Min. verschieben", () => PostponeBreak(cycle));
         }
         else if (CurrentCycle < Model.Cycles)
         {
@@ -58,6 +62,16 @@ public partial class PomodoroViewModel : CountdownViewModelBase
             Reset();
             _notifications.Notify("Pomodoro abgeschlossen", $"{Name}: alle {Model.Cycles} Zyklen geschafft");
         }
+    }
+
+    // Nur wirksam, solange noch die Pause dieses Zyklus läuft – nach Reset oder Phasenwechsel wird der Klick ignoriert.
+    private void PostponeBreak(int cycle)
+    {
+        if (!IsBreak || CurrentCycle != cycle)
+            return;
+
+        IsBreak = false;
+        StartCountdown(TimeSpan.FromMinutes(PostponeMinutes));
     }
 
     protected override void Reset()
