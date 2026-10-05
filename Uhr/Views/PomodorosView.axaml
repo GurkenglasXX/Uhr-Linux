@@ -19,7 +19,11 @@
                     </StackPanel>
                     <StackPanel Spacing="4">
                         <TextBlock Classes="subtle" Text="Pause (Min.)" />
-                        <NumericUpDown Value="{Binding NewBreakMinutes}" Minimum="1" Maximum="120" />
+                        <NumericUpDown Value="{Binding NewBreakMinutes}" Minimum="0" Maximum="120" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="subtle" Text="Pause (Sek.)" />
+                        <NumericUpDown Value="{Binding NewBreakSeconds}" Minimum="0" Maximum="59" />
                     </StackPanel>
                     <StackPanel Spacing="4">
                         <TextBlock Classes="subtle" Text="Zyklen" />

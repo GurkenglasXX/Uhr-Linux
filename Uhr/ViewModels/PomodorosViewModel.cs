@@ -38,6 +38,10 @@ public partial class PomodorosViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AddCommand))]
+    public partial decimal? NewBreakSeconds { get; set; } = 0;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(AddCommand))]
     public partial decimal? NewCycles { get; set; } = 4;
 
     public void Tick(DateTime utcNow)
@@ -46,7 +50,7 @@ public partial class PomodorosViewModel : ViewModelBase
             pomodoro.Tick(utcNow);
     }
 
-    private bool CanAdd() => NewWorkMinutes > 0 && NewBreakMinutes > 0 && NewCycles > 0;
+    private bool CanAdd() => NewWorkMinutes > 0 && NewBreakMinutes >= 0 && NewBreakSeconds >= 0 && NewBreakMinutes + NewBreakSeconds > 0 && NewCycles > 0;
 
     [RelayCommand(CanExecute = nameof(CanAdd))]
     private void Add()
@@ -56,6 +60,7 @@ public partial class PomodorosViewModel : ViewModelBase
             Name = string.IsNullOrWhiteSpace(NewName) ? "Pomodoro" : NewName.Trim(),
             WorkMinutes = (int)NewWorkMinutes!.Value,
             BreakMinutes = (int)NewBreakMinutes!.Value,
+            BreakSeconds = (int)NewBreakSeconds!.Value,
             Cycles = (int)NewCycles!.Value,
         };
         _data.Pomodoros.Add(model);

@@ -44,11 +44,12 @@ Die Tabs Wecker, Timer und Pomodoro haben oben einen Bereich zum Anlegen eines n
 
 ### Pomodoro
 
-- Name, Fokuszeit, Pausenlänge (jeweils in Minuten) und Anzahl der Zyklen eingeben und hinzufügen.
+- Name, Fokuszeit (in Minuten), Pausenlänge (in Minuten und Sekunden) und Anzahl der Zyklen eingeben und hinzufügen. Die Pause kann auch nur aus Sekunden bestehen.
 - Nach dem Start wechseln sich Fokuszeit und Pause ab, bis alle Zyklen durchlaufen sind.
 - Sound und Benachrichtigung kommen bei jedem Wechsel und am Ende aller Zyklen.
 - In der Benachrichtigung am Ende der Fokuszeit lässt sich die Pause um 3 Minuten verschieben. Die Fokuszeit läuft dann 3 Minuten weiter, danach kommt die Benachrichtigung erneut. Das geht beliebig oft.
-- Die Kachel zeigt die aktuelle Phase und den Zyklus an, z. B. „Fokus · Zyklus 2 von 4“.
+- Unter dem Namen zeigt die Kachel Fokuszeit, Pause und Zyklen untereinander an, z. B. „2:30 Min. Pause“.
+- Im Ring zeigt sie die aktuelle Phase und den Zyklus an, z. B. „Fokus · Zyklus 2 von 4“.
 
 ### Stoppuhr
 

@@ -25,7 +25,11 @@ public partial class PomodoroViewModel : CountdownViewModelBase
 
     public string Name => Model.Name;
 
-    public string SettingsText => $"{Model.WorkMinutes} Min. Fokus · {Model.BreakMinutes} Min. Pause · {Model.Cycles}×";
+    public string SettingsText => $"{Model.WorkMinutes} Min. Fokus\n{BreakText} Pause\n{Model.Cycles} {(Model.Cycles == 1 ? "Zyklus" : "Zyklen")}";
+
+    private string BreakText => Model.BreakSeconds == 0
+        ? $"{Model.BreakMinutes} Min."
+        : $"{Model.BreakMinutes}:{Model.BreakSeconds:00} Min.";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PhaseText), nameof(ProgressAngle))]
@@ -38,7 +42,9 @@ public partial class PomodoroViewModel : CountdownViewModelBase
     public string PhaseText => $"{(IsBreak ? "Pause" : "Fokus")} · Zyklus {CurrentCycle} von {Model.Cycles}";
 
     protected override TimeSpan CurrentDuration =>
-        TimeSpan.FromMinutes(IsBreak ? Model.BreakMinutes : Model.WorkMinutes);
+        IsBreak
+            ? new TimeSpan(0, Model.BreakMinutes, Model.BreakSeconds)
+            : TimeSpan.FromMinutes(Model.WorkMinutes);
 
     protected override void OnElapsed()
     {
@@ -47,7 +53,7 @@ public partial class PomodoroViewModel : CountdownViewModelBase
             IsBreak = true;
             StartCountdown(CurrentDuration);
             var cycle = CurrentCycle;
-            _notifications.Notify("Fokuszeit vorbei", $"{Name}: {Model.BreakMinutes} Min. Pause (Zyklus {CurrentCycle} von {Model.Cycles})",
+            _notifications.Notify("Fokuszeit vorbei", $"{Name}: {BreakText} Pause (Zyklus {CurrentCycle} von {Model.Cycles})",
                 $"Pause um {PostponeMinutes} Min. verschieben", () => PostponeBreak(cycle));
         }
         else if (CurrentCycle < Model.Cycles)
