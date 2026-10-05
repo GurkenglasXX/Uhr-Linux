@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Uhr.ViewModels"
+             x:Class="Uhr.Views.StopwatchView"
+             x:DataType="vm:StopwatchViewModel">
+
+    <Border Classes="card" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="32">
+        <StackPanel Spacing="24">
+            <Panel Width="300" Height="300">
+                <Ellipse Stroke="{DynamicResource RingTrackBrush}" StrokeThickness="8" Margin="4" />
+                <Arc Stroke="{DynamicResource AccentBrush}" StrokeThickness="8" Margin="4"
+                     StrokeLineCap="Round" StartAngle="-90"
+                     SweepAngle="{Binding ProgressAngle}" />
+                <TextBlock Text="{Binding ElapsedText}" FontSize="56" FontWeight="SemiLight"
+                           FontFeatures="+tnum"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Panel>
+            <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+                <Button Classes="accent round" Command="{Binding StartPauseCommand}"
+                        ToolTip.Tip="Starten / Anhalten">
+                    <Panel>
+                        <PathIcon Data="{StaticResource PlayIcon}" IsVisible="{Binding !IsRunning}" />
+                        <PathIcon Data="{StaticResource PauseIcon}" IsVisible="{Binding IsRunning}" />
+                    </Panel>
+                </Button>
+                <Button Classes="round" Command="{Binding ResetCommand}" ToolTip.Tip="Zurücksetzen">
+                    <PathIcon Data="{StaticResource ResetIcon}" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

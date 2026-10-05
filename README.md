@@ -1,6 +1,6 @@
 # Uhr
 
-Nachbau der Windows-11-Uhr-App für Ubuntu. Die App bietet einen Wecker, einen Timer und einen Pomodoro-Timer, jeweils in einem eigenen Tab. Ist eine Zeit erreicht oder abgelaufen, spielt die App einen Systemsound ab und zeigt eine Systembenachrichtigung an.
+Nachbau der Windows-11-Uhr-App für Ubuntu. Die App bietet einen Wecker, einen Timer, einen Pomodoro-Timer und eine Stoppuhr, jeweils in einem eigenen Tab. Ist eine Zeit erreicht oder abgelaufen, spielt die App einen Systemsound ab und zeigt eine Systembenachrichtigung an.
 
 Umgesetzt mit C#/.NET 10 und Avalonia nach dem MVVM-Prinzip.
 
@@ -28,7 +28,7 @@ Die fertige Datei liegt danach unter `Uhr/bin/Release/net10.0/linux-x64/publish/
 
 ## Nutzung
 
-Jeder Tab hat oben einen Bereich zum Anlegen eines neuen Eintrags. Nach „Hinzufügen“ erscheint der Eintrag als Kachel und kann dort gestartet, angehalten oder gelöscht werden.
+Die Tabs Wecker, Timer und Pomodoro haben oben einen Bereich zum Anlegen eines neuen Eintrags. Nach „Hinzufügen“ erscheint der Eintrag als Kachel und kann dort gestartet, angehalten oder gelöscht werden.
 
 ### Wecker
 
@@ -50,6 +50,12 @@ Jeder Tab hat oben einen Bereich zum Anlegen eines neuen Eintrags. Nach „Hinzu
 - In der Benachrichtigung am Ende der Fokuszeit lässt sich die Pause um 3 Minuten verschieben. Die Fokuszeit läuft dann 3 Minuten weiter, danach kommt die Benachrichtigung erneut. Das geht beliebig oft.
 - Die Kachel zeigt die aktuelle Phase und den Zyklus an, z. B. „Fokus · Zyklus 2 von 4“.
 
+### Stoppuhr
+
+- ▶ startet die Stoppuhr, ⏸ hält sie an, ein erneutes ▶ zählt ab dem angehaltenen Stand weiter.
+- ↻ setzt sie auf null zurück. Das geht, solange sie läuft oder angehalten ist.
+- Die Zeit wird sekundengenau angezeigt, der Ring füllt sich einmal pro Minute.
+
 ## Gespeicherte Daten
 
-Alle angelegten Wecker, Timer und Pomodoros werden in `~/.config/Uhr/settings.json` gespeichert und beim nächsten Start wieder geladen. Laufende Timer werden nicht gespeichert.
+Alle angelegten Wecker, Timer und Pomodoros werden in `~/.config/Uhr/settings.json` gespeichert und beim nächsten Start wieder geladen. Laufende Timer und der Stand der Stoppuhr werden nicht gespeichert.

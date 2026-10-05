@@ -12,6 +12,7 @@ public sealed class MainWindowViewModel : ViewModelBase
         Alarms = new AlarmsViewModel(data, storage, notifications);
         Timers = new TimersViewModel(data, storage, notifications);
         Pomodoros = new PomodorosViewModel(data, storage, notifications);
+        Stopwatch = new StopwatchViewModel();
 
         DispatcherTimer.Run(() =>
         {
@@ -23,6 +24,7 @@ public sealed class MainWindowViewModel : ViewModelBase
     public AlarmsViewModel Alarms { get; }
     public TimersViewModel Timers { get; }
     public PomodorosViewModel Pomodoros { get; }
+    public StopwatchViewModel Stopwatch { get; }
 
     private void Tick()
     {

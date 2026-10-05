@@ -36,5 +36,14 @@
             </TabItem.Header>
             <ContentControl Content="{Binding Pomodoros}" />
         </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource StopwatchIcon}" />
+                    <TextBlock Text="Stoppuhr" VerticalAlignment="Center" />
+                </StackPanel>
+            </TabItem.Header>
+            <ContentControl Content="{Binding Stopwatch}" />
+        </TabItem>
     </TabControl>
 </Window>
