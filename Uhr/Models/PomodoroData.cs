@@ -7,4 +7,5 @@ public sealed class PomodoroData
     public int BreakMinutes { get; set; }
     public int BreakSeconds { get; set; }
     public int Cycles { get; set; }
+    public bool RandomFocus { get; set; }
 }

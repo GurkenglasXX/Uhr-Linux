@@ -1,6 +1,6 @@
 # Uhr
 
-Nachbau der Windows-11-Uhr-App für Ubuntu. Die App bietet einen Wecker, einen Timer, einen Pomodoro-Timer und eine Stoppuhr, jeweils in einem eigenen Tab. Ist eine Zeit erreicht oder abgelaufen, spielt die App einen Systemsound ab und zeigt eine Systembenachrichtigung an.
+Nachbau der Windows-11-Uhr-App für Ubuntu. Die App bietet einen Wecker, einen Timer, einen Pomodoro-Timer und eine Stoppuhr, jeweils in einem eigenen Tab. Ist eine Zeit erreicht oder abgelaufen, spielt die App einen kurzen Alarmton ab und zeigt eine Systembenachrichtigung an. Der Ton ist in die Programmdatei eingebettet und wird zum Abspielen nach `~/.cache/Uhr/alarm.oga` geschrieben.
 
 Umgesetzt mit C#/.NET 10 und Avalonia nach dem MVVM-Prinzip.
 
@@ -45,6 +45,7 @@ Die Tabs Wecker, Timer und Pomodoro haben oben einen Bereich zum Anlegen eines n
 ### Pomodoro
 
 - Name, Fokuszeit (in Minuten), Pausenlänge (in Minuten und Sekunden) und Anzahl der Zyklen eingeben und hinzufügen. Die Pause kann auch nur aus Sekunden bestehen.
+- Mit dem Schalter „± 5-20% Zeit“ über der Fokuszeit wird die Fokuszeit in jedem Zyklus zufällig um 5 bis 20 % verlängert oder verkürzt. Die Kachel zeigt dann während der Fokuszeit keine Restzeit, sondern nur „ca. 25 Min.“; der Ring ist blau, solange der Pomodoro läuft. Pause und verschobene Minuten laufen weiterhin sichtbar ab.
 - Nach dem Start wechseln sich Fokuszeit und Pause ab, bis alle Zyklen durchlaufen sind.
 - Sound und Benachrichtigung kommen bei jedem Wechsel und am Ende aller Zyklen.
 - In der Benachrichtigung am Ende der Fokuszeit lässt sich die Pause um 3 Minuten verschieben. Die Fokuszeit läuft dann 3 Minuten weiter, danach kommt die Benachrichtigung erneut. Das geht beliebig oft.

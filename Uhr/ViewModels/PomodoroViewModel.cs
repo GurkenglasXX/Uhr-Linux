@@ -9,15 +9,19 @@ namespace Uhr.ViewModels;
 public partial class PomodoroViewModel : CountdownViewModelBase
 {
     private const int PostponeMinutes = 3;
+    private const double MinDeviation = 0.05;
+    private const double MaxDeviation = 0.20;
 
     private readonly INotificationService _notifications;
     private readonly Action<PomodoroViewModel> _delete;
+    private TimeSpan _focusDuration;
 
     public PomodoroViewModel(PomodoroData model, INotificationService notifications, Action<PomodoroViewModel> delete)
     {
         Model = model;
         _notifications = notifications;
         _delete = delete;
+        _focusDuration = NextFocusDuration();
         Remaining = CurrentDuration;
     }
 
@@ -25,14 +29,18 @@ public partial class PomodoroViewModel : CountdownViewModelBase
 
     public string Name => Model.Name;
 
-    public string SettingsText => $"{Model.WorkMinutes} Min. Fokus\n{BreakText} Pause\n{Model.Cycles} {(Model.Cycles == 1 ? "Zyklus" : "Zyklen")}";
+    public string SettingsText => $"{FocusText} Fokus\n{BreakText} Pause\n{Model.Cycles} {(Model.Cycles == 1 ? "Zyklus" : "Zyklen")}";
+
+    public string FocusText => Model.RandomFocus
+        ? $"ca. {Model.WorkMinutes} Min."
+        : $"{Model.WorkMinutes} Min.";
 
     private string BreakText => Model.BreakSeconds == 0
         ? $"{Model.BreakMinutes} Min."
         : $"{Model.BreakMinutes}:{Model.BreakSeconds:00} Min.";
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(PhaseText), nameof(ProgressAngle))]
+    [NotifyPropertyChangedFor(nameof(PhaseText), nameof(ProgressAngle), nameof(HidesRemaining))]
     public partial bool IsBreak { get; set; }
 
     [ObservableProperty]
@@ -41,16 +49,35 @@ public partial class PomodoroViewModel : CountdownViewModelBase
 
     public string PhaseText => $"{(IsBreak ? "Pause" : "Fokus")} · Zyklus {CurrentCycle} von {Model.Cycles}";
 
+    // Die verschobenen 3 Minuten sind fest und laufen deshalb sichtbar ab.
+    public bool HidesRemaining => Model.RandomFocus && !IsBreak && !IsPostponed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HidesRemaining))]
+    private partial bool IsPostponed { get; set; }
+
     protected override TimeSpan CurrentDuration =>
         IsBreak
             ? new TimeSpan(0, Model.BreakMinutes, Model.BreakSeconds)
-            : TimeSpan.FromMinutes(Model.WorkMinutes);
+            : _focusDuration;
+
+    // Weicht zufällig um 5 bis 20 % nach oben oder unten ab, damit man die Restzeit nicht abschätzen kann.
+    private TimeSpan NextFocusDuration()
+    {
+        var focus = TimeSpan.FromMinutes(Model.WorkMinutes);
+        if (!Model.RandomFocus)
+            return focus;
+
+        var deviation = MinDeviation + Random.Shared.NextDouble() * (MaxDeviation - MinDeviation);
+        return focus * (Random.Shared.Next(2) == 0 ? 1 - deviation : 1 + deviation);
+    }
 
     protected override void OnElapsed()
     {
         if (!IsBreak)
         {
             IsBreak = true;
+            IsPostponed = false;
             StartCountdown(CurrentDuration);
             var cycle = CurrentCycle;
             _notifications.Notify("Fokuszeit vorbei", $"{Name}: {BreakText} Pause (Zyklus {CurrentCycle} von {Model.Cycles})",
@@ -60,6 +87,7 @@ public partial class PomodoroViewModel : CountdownViewModelBase
         {
             IsBreak = false;
             CurrentCycle++;
+            _focusDuration = NextFocusDuration();
             StartCountdown(CurrentDuration);
             _notifications.Notify("Pause vorbei", $"{Name}: weiter mit Zyklus {CurrentCycle} von {Model.Cycles}");
         }
@@ -77,6 +105,7 @@ public partial class PomodoroViewModel : CountdownViewModelBase
             return;
 
         IsBreak = false;
+        IsPostponed = true;
         StartCountdown(TimeSpan.FromMinutes(PostponeMinutes));
     }
 
@@ -84,6 +113,8 @@ public partial class PomodoroViewModel : CountdownViewModelBase
     {
         IsBreak = false;
         CurrentCycle = 1;
+        IsPostponed = false;
+        _focusDuration = NextFocusDuration();
         base.Reset();
     }
 

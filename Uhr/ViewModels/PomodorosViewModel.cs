@@ -44,6 +44,9 @@ public partial class PomodorosViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(AddCommand))]
     public partial decimal? NewCycles { get; set; } = 4;
 
+    [ObservableProperty]
+    public partial bool NewRandomFocus { get; set; }
+
     public void Tick(DateTime utcNow)
     {
         foreach (var pomodoro in Pomodoros)
@@ -62,6 +65,7 @@ public partial class PomodorosViewModel : ViewModelBase
             BreakMinutes = (int)NewBreakMinutes!.Value,
             BreakSeconds = (int)NewBreakSeconds!.Value,
             Cycles = (int)NewCycles!.Value,
+            RandomFocus = NewRandomFocus,
         };
         _data.Pomodoros.Add(model);
         Pomodoros.Add(Create(model));

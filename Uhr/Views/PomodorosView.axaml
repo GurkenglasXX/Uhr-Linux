@@ -9,23 +9,33 @@
             <StackPanel Spacing="12">
                 <TextBlock Classes="cardTitle" Text="Neuer Pomodoro" />
                 <WrapPanel ItemSpacing="12" LineSpacing="12">
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="4" VerticalAlignment="Bottom">
                         <TextBlock Classes="subtle" Text="Name" />
                         <TextBox Text="{Binding NewName}" Width="220" />
                     </StackPanel>
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="4" VerticalAlignment="Bottom">
+                        <DockPanel Width="120" ToolTip.Tip="Fokuszeit pro Zyklus zufällig um 5 bis 20 % verlängern oder verkürzen">
+                            <LayoutTransformControl DockPanel.Dock="Right">
+                                <LayoutTransformControl.LayoutTransform>
+                                    <ScaleTransform ScaleX="0.9" ScaleY="0.9" />
+                                </LayoutTransformControl.LayoutTransform>
+                                <ToggleSwitch IsChecked="{Binding NewRandomFocus}" MinWidth="0" Margin="0,0,-13,0"
+                                              OnContent="" OffContent="" />
+                            </LayoutTransformControl>
+                            <TextBlock Classes="subtle" FontSize="12" Text="± 5-20% Zeit" VerticalAlignment="Center" />
+                        </DockPanel>
                         <TextBlock Classes="subtle" Text="Fokus (Min.)" />
                         <NumericUpDown Value="{Binding NewWorkMinutes}" Minimum="1" Maximum="240" />
                     </StackPanel>
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="4" VerticalAlignment="Bottom">
                         <TextBlock Classes="subtle" Text="Pause (Min.)" />
                         <NumericUpDown Value="{Binding NewBreakMinutes}" Minimum="0" Maximum="120" />
                     </StackPanel>
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="4" VerticalAlignment="Bottom">
                         <TextBlock Classes="subtle" Text="Pause (Sek.)" />
                         <NumericUpDown Value="{Binding NewBreakSeconds}" Minimum="0" Maximum="59" />
                     </StackPanel>
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="4" VerticalAlignment="Bottom">
                         <TextBlock Classes="subtle" Text="Zyklen" />
                         <NumericUpDown Value="{Binding NewCycles}" Minimum="1" Maximum="20" />
                     </StackPanel>
@@ -69,10 +79,21 @@
                                     <Ellipse Stroke="{DynamicResource RingTrackBrush}" StrokeThickness="6" Margin="3" />
                                     <Arc Stroke="{DynamicResource AccentBrush}" StrokeThickness="6" Margin="3"
                                          StrokeLineCap="Round" StartAngle="-90"
-                                         SweepAngle="{Binding ProgressAngle}" />
+                                         SweepAngle="{Binding ProgressAngle}"
+                                         IsVisible="{Binding !HidesRemaining}" />
+                                    <Ellipse Stroke="{DynamicResource AccentBrush}" StrokeThickness="6" Margin="3">
+                                        <Ellipse.IsVisible>
+                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                <Binding Path="HidesRemaining" />
+                                                <Binding Path="IsRunning" />
+                                            </MultiBinding>
+                                        </Ellipse.IsVisible>
+                                    </Ellipse>
                                     <StackPanel VerticalAlignment="Center" Spacing="4">
                                         <TextBlock Text="{Binding RemainingText}" FontSize="32" FontWeight="SemiLight"
-                                                   HorizontalAlignment="Center" />
+                                                   HorizontalAlignment="Center" IsVisible="{Binding !HidesRemaining}" />
+                                        <TextBlock Text="{Binding FocusText}" FontSize="26" FontWeight="SemiLight"
+                                                   HorizontalAlignment="Center" IsVisible="{Binding HidesRemaining}" />
                                         <TextBlock Classes="subtle" Text="{Binding PhaseText}" HorizontalAlignment="Center" />
                                     </StackPanel>
                                 </Panel>

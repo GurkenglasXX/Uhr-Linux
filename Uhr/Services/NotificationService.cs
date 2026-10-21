@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Tmds.DBus.Protocol;
 
@@ -11,24 +13,25 @@ namespace Uhr.Services;
 // Spricht den Benachrichtigungsdienst direkt per D-Bus an, weil notify-send 0.8.8 unter KDE Plasma keine Buttons anzeigt.
 public sealed class NotificationService : INotificationService
 {
-    private const string SoundFile = "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga";
     private const string Service = "org.freedesktop.Notifications";
     private const string ObjectPath = "/org/freedesktop/Notifications";
     private const string ActionKey = "action";
     private const byte UrgencyCritical = 2;
+
+    private static readonly Lazy<string?> SoundFile = new(ExtractSound);
 
     private readonly ConcurrentDictionary<uint, Action> _pendingActions = new();
     private Task? _subscription;
 
     public void Notify(string title, string message)
     {
-        Run("paplay", SoundFile);
+        PlaySound();
         _ = SendAsync(title, message, null, null);
     }
 
     public void Notify(string title, string message, string actionText, Action onAction)
     {
-        Run("paplay", SoundFile);
+        PlaySound();
         _ = SendAsync(title, message, actionText, onAction);
     }
 
@@ -107,6 +110,33 @@ public sealed class NotificationService : INotificationService
         Path = ObjectPath,
         Member = member,
     };
+
+    private static void PlaySound()
+    {
+        if (SoundFile.Value is { } file)
+            Run("paplay", file);
+    }
+
+    // paplay braucht eine echte Datei, die App liegt aber als einzelne Programmdatei vor.
+    private static string? ExtractSound()
+    {
+        try
+        {
+            var cache = Environment.GetEnvironmentVariable("XDG_CACHE_HOME") is { Length: > 0 } xdg
+                ? xdg
+                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+            var file = Path.Combine(cache, "Uhr", "alarm.oga");
+            Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+            using var source = AssetLoader.Open(new Uri("avares://Uhr/Assets/alarm.oga"));
+            using var target = File.Create(file);
+            source.CopyTo(target);
+            return file;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 
     private static void Run(string fileName, params string[] arguments)
     {
